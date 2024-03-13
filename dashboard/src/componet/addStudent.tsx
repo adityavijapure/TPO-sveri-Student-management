@@ -24,7 +24,7 @@ function Student() {
       const semesters = ["II", "III", "IV", "V", "VI", "VII", "VIII"];
       semesters.forEach(async (semester) => {
         const marksCollectionRef = collection(db, `marks/${prn}/${semester}`);
-        await addDoc(marksCollectionRef, { subject1: 0, subject2: 0, subject3: 0 }); // Add more subjects as needed
+        await addDoc(marksCollectionRef, { Academic: 0, ExtracurricularActivity: 0, mockInterview: 0,TrainingAttendance: 0, TrainingAssessments: 0, Project: 0, Internship: 0,MiniProject: 0, TechCertifications: 0,communicationSkills: 0, Behavior: 0, Resume: 0}); // Add more subjects as needed
       });
 
       // Clear the form after submission
@@ -87,7 +87,7 @@ function Student() {
                     onChange={(e) => setBranch(e.target.value)}
                   >
                     <option value="cse">CSE</option>
-                    <option value="Entc">ENTC</option>
+                    <option value="entc">ENTC</option>
                     <option value="civil">CIVIL</option>
                     <option value="ele">ELECTRIC</option>
                     <option value="mech">MECHANICAL</option>

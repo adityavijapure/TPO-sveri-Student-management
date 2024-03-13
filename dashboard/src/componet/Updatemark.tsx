@@ -80,9 +80,18 @@ function UpdateMark() {
                     onChange={(e) => setSubject(e.target.value)}
                   >
                     <option value="">Select Subject</option>
-                    <option value="subject1">Subject 1</option>
-                    <option value="subject2">Subject 2</option>
-                    <option value="subject3">Subject 3</option>
+                    <option value="Academic">Academics</option>
+                    <option value="ExtracurricularActivity">Extracurricular Activity</option>
+                    <option value="mockInterview">Mock interview</option>
+                    <option value="TrainingAttendance">Training Attendance</option>
+                    <option value="TrainingAssessments">Training Assessment</option>
+                    <option value="Project">Project</option>
+                    <option value="Internship">Internship</option>
+                    <option value="MiniProject">Mini Project</option>
+                    <option value="TechCertifications">Technical Certifications</option>
+                    <option value="communicationSkills">Communication skills</option>
+                    <option value="Behavior">Behavior</option>
+                    <option value="Resume">Resume</option>
                     {/* Add more subjects */}
                   </select>
                 </div>
@@ -102,6 +111,10 @@ function UpdateMark() {
                     <option value="II">II</option>
                     <option value="III">III</option>
                     <option value="IV">IV</option>
+                    <option value="V">V</option>
+                    <option value="VI">VI</option>
+                    <option value="VII">VII</option>
+                    <option value="VIII">VIII</option>
                     {/* Add more semesters */}
                   </select>
                 </div>
