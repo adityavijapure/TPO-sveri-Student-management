@@ -1,15 +1,16 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { db } from "../firebase";
-import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 function UpdateMark() {
-  const [prn, setPrn] = useState(0); // Changed to accept number
+  const [prn, setPrn] = useState(""); // Changed to string type
   const [semester, setSemester] = useState("");
   const [subject, setSubject] = useState("");
   const [marks, setMarks] = useState("");
 
-  const handleSubmit = async () => {
-   
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
     try {
       // Ensure all fields are filled
       if (!prn || !semester || !subject || !marks) {
@@ -17,22 +18,14 @@ function UpdateMark() {
         return;
       }
 
-      // Check if the semester document exists
-      const semesterRef = doc(db, `marks/${prn}/${semester}`);
-      const semesterSnap = await getDoc(semesterRef); // Changed to getDoc
+      // Update marks for the selected subject and semester
+      const markRef = doc(db, `marks/${prn}/${semester}/${subject}`);
+      await setDoc(markRef, { marks: parseInt(marks) }, { merge: true });
 
-      if (semesterSnap.exists()) {
-        // Update marks for the selected subject and semester
-        await updateDoc(semesterRef, { [subject]: parseInt(marks) });
-        console.log("Marks updated successfully!");
-      } else {
-        // Create a new semester document and update marks
-        await setDoc(semesterRef, { [subject]: parseInt(marks) });
-        console.log("New semester document created with marks!");
-      }
+      console.log("Marks updated successfully!");
 
       // Clear the form after submission
-      setPrn(0); // Changed to reset to number
+      setPrn("");
       setSemester("");
       setSubject("");
       setMarks("");
@@ -59,12 +52,12 @@ function UpdateMark() {
                 </div>
                 <div className="col-75">
                   <input
-                    type="number" // Changed to accept number
+                    type="text"
                     id="prn"
                     name="prn"
                     placeholder="Enter PRN.."
                     value={prn}
-                    onChange={(e) => setPrn(parseInt(e.target.value))} // Parse string to number
+                    onChange={(e) => setPrn(e.target.value)}
                   />
                 </div>
               </div>
@@ -125,13 +118,12 @@ function UpdateMark() {
                 </div>
                 <div className="col-75">
                   <input
-                    type="number" // Changed to accept number
+                    type="number"
                     id="marks"
                     name="marks"
                     placeholder="Enter marks.."
                     value={marks}
                     onChange={(e) => setMarks(e.target.value)}
-
                   />
                 </div>
               </div>
@@ -147,4 +139,4 @@ function UpdateMark() {
   );
 }
 
-export default UpdateMark;
+export default UpdateMark;
