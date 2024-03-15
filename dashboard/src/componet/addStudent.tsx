@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { db } from "../firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc } from "firebase/firestore";
 
 function Student() {
-  const [prn, setPrn] = useState<number>(0);
+  const [prn, setPrn] = useState(""); // Changed to string type
   const [name, setName] = useState("");
   const [branch, setBranch] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
 
     try {
       // Add student details
-      await db.collection("students").doc(prn.toString()).set({
+      await db.collection("students").doc(prn).set({
         name: name,
         prn: prn,
         branch: branch,
@@ -23,13 +23,30 @@ function Student() {
       // Create marks documents for each semester with default values
       const semesters = ["II", "III", "IV", "V", "VI", "VII", "VIII"];
       semesters.forEach(async (semester) => {
-        const marksCollectionRef = collection(db, `marks/${prn}/${semester}`);
-        await addDoc(marksCollectionRef, { Academic: 0, ExtracurricularActivity: 0, mockInterview: 0,TrainingAttendance: 0, TrainingAssessments: 0, Project: 0, Internship: 0,MiniProject: 0, TechCertifications: 0,communicationSkills: 0, Behavior: 0, Resume: 0}); // Add more subjects as needed
+        const semesterRef = db.collection(`marks/${prn}/${semester}`);
+        const subjectMarks = {
+          Academic: 0,
+          ExtracurricularActivity: 0,
+          mockInterview: 0,
+          TrainingAttendance: 0,
+          TrainingAssessments: 0,
+          Project: 0,
+          Internship: 0,
+          MiniProject: 0,
+          TechCertifications: 0,
+          communicationSkills: 0,
+          Behavior: 0,
+          Resume: 0,
+        };
+
+        for (const [subject, marks] of Object.entries(subjectMarks)) {
+          await setDoc(doc(semesterRef, subject), { marks });
+        }
       });
 
       // Clear the form after submission
       setName("");
-      setPrn(0);
+      setPrn("");
       setBranch("");
     } catch (error) {
       console.error("Error adding student: ", error);
@@ -66,12 +83,12 @@ function Student() {
                 </div>
                 <div className="col-75">
                   <input
-                    type="number"
+                    type="text" // Changed to accept string
                     id="prn"
                     name="prnNo"
                     placeholder="Enter PRN No.."
                     value={prn}
-                    onChange={(e) => setPrn(parseInt(e.target.value))}
+                    onChange={(e) => setPrn(e.target.value)}
                   />
                 </div>
               </div>
@@ -86,6 +103,7 @@ function Student() {
                     value={branch}
                     onChange={(e) => setBranch(e.target.value)}
                   >
+                    <option value="">Select Branch</option>
                     <option value="cse">CSE</option>
                     <option value="entc">ENTC</option>
                     <option value="civil">CIVIL</option>
@@ -106,4 +124,4 @@ function Student() {
   );
 }
 
-export default Student;
+export default Student;
