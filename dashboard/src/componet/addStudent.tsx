@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { db } from "../firebase";
-import { collection, addDoc, doc, setDoc } from "firebase/firestore";
+import {  doc, setDoc } from "firebase/firestore";
 
 function Student() {
   const [prn, setPrn] = useState(""); // Changed to string type
   const [name, setName] = useState("");
   const [branch, setBranch] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent default form submission behavior
 
     try {
@@ -60,7 +60,7 @@ function Student() {
       </div>
       <div className="InformationMainBox">
         <div className="InfoBox">
-          <div className="infotable">
+          <div className="info table">
             <form onSubmit={handleSubmit}>
               <div className="row">
                 <div className="col-25">
@@ -105,7 +105,7 @@ function Student() {
                   >
                     <option value="">Select Branch</option>
                     <option value="cse">CSE</option>
-                    <option value="entc">ENTC</option>
+                    <option value="en_tc">EN & TC</option>
                     <option value="civil">CIVIL</option>
                     <option value="ele">ELECTRIC</option>
                     <option value="mech">MECHANICAL</option>

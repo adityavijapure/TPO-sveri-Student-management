@@ -7,10 +7,10 @@ function UpdateMark() {
   const [semester, setSemester] = useState("");
   const [subject, setSubject] = useState("");
   const [marks, setMarks] = useState("");
+  const [year, setYear] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
     try {
       // Ensure all fields are filled
       if (!prn || !semester || !subject || !marks) {
@@ -75,21 +75,16 @@ function UpdateMark() {
                     <option value="">Select Subject</option>
                     <option value="Academic">Academics</option>
                     <option value="ExtracurricularActivity">Extracurricular Activity</option>
-                    <option value="mockInterview">Mock interview</option>
+                    <option value="mockInterview">Mock Interview</option>
                     <option value="TrainingAttendance">Training Attendance</option>
                     <option value="TrainingAssessments">Training Assessment</option>
-                    <option value="Project">Project</option>
-                    <option value="Internship">Internship</option>
-                    <option value="MiniProject">Mini Project</option>
-                    <option value="TechCertifications">Technical Certifications</option>
-                    <option value="communicationSkills">Communication skills</option>
                     <option value="Behavior">Behavior</option>
-                    <option value="Resume">Resume</option>
                     {/* Add more subjects */}
                   </select>
                 </div>
               </div>
-              <div className="row">
+             
+              {subject == "mockInterview" ?  <div className="row">
                 <div className="col-25">
                   <label>Semester</label>
                 </div>
@@ -101,17 +96,43 @@ function UpdateMark() {
                     onChange={(e) => setSemester(e.target.value)}
                   >
                     <option value="">Select Semester</option>
+                    <option value="I">I</option>
                     <option value="II">II</option>
                     <option value="III">III</option>
                     <option value="IV">IV</option>
                     <option value="V">V</option>
                     <option value="VI">VI</option>
                     <option value="VII">VII</option>
-                    <option value="VIII">VIII</option>
                     {/* Add more semesters */}
-                  </select>
+                    </select>
+                    </div>
+                    </div>:null}
+
+                     {/*Add more years */}
+                      {subject == "Academic" ?  <div className="row">
+                <div className="col-25">
+                  <label>Year</label>
                 </div>
-              </div>
+                <div className="col-75">
+                  <select
+                    id="Year"
+                    name="year"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                  >
+                    <option value="">Select year</option>
+                    <option value="10th">10th</option>
+                    <option value="12th">12th</option>
+                    <option value="diploma">Diploma</option>
+                    <option value="I">Ist Year</option>
+                    <option value="II">IInd Year</option>
+                    <option value="III">IIIrd Year</option>
+                    
+                    {/* Add more semesters */}
+                    </select>
+                    </div>
+                     </div>:null}
+               
               <div className="row">
                 <div className="col-25">
                   <label>Marks</label>
