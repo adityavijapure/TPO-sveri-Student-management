@@ -8,31 +8,51 @@ function UpdateMark() {
   const [subject, setSubject] = useState("");
   const [marks, setMarks] = useState("");
   const [year, setYear] = useState("");
+  const [level10, setLevel10] = useState("");
+  const [level12, setLevel12] = useState("");
+  const [firstYear, setFirstYear] = useState("");
+  const [secondYear, setSecondYear] = useState("");
+  const [thirdYear, setThirdYear] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       // Ensure all fields are filled
-      if (!prn || !semester || !subject || !marks) {
+      if (!prn || !subject || !marks) {
         console.error("All fields are required");
         return;
       }
 
-      // Update marks for the selected subject and semester
-      const markRef = doc(db, `marks/${prn}/${semester}/${subject}`);
-      await setDoc(markRef, { marks: parseInt(marks) }, { merge: true });
-
+      // Update marks for the selected subject and academic levels
+      const markRef = doc(db, `marks/${prn}/${subject}`);
+      const data = {
+        level10: parseInt(level10),
+        level12: parseInt(level12),
+        firstYear: parseInt(firstYear),
+        secondYear: parseInt(secondYear),
+        thirdyear: parseInt(thirdYear), 
+        marks: parseInt(marks)
+      };
+      await setDoc(markRef, data, { merge: true });
+  
       console.log("Marks updated successfully!");
-
+  
       // Clear the form after submission
       setPrn("");
       setSemester("");
       setSubject("");
+      setYear("");
       setMarks("");
+      setLevel10("");
+      setLevel12("");
+      setFirstYear("");
+      setSecondYear("");
+      setThirdYear("");
     } catch (error) {
       console.error("Error updating marks: ", error);
     }
   };
+  
 
   return (
     <div className="Midbox">
