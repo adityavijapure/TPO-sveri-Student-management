@@ -7,18 +7,9 @@ function UpdateMark() {
   const [semester, setSemester] = useState("");
   const [subject, setSubject] = useState("");
   const [marks, setMarks] = useState("");
-  const [year, setYear] = useState("");
-  
-
+  const [Year, setYear] = useState("");
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-  //   const subjects = ["Subject1", "Subject2", "Subject3"]; // Replace with your actual subject names
-  //   subjects.forEach(async (subject) => {
-  //     await setDoc(doc(semesterRef, subject), { marks: 0 });
-  //   });
-  // });
-    
 
     try {
       // Ensure all fields are filled
@@ -27,34 +18,26 @@ function UpdateMark() {
         return;
       }
 
-      // Update marks for the selected subject and academic levels
+
       if (subject === "Academic") {
-        
-        // Execute logic specific to academics
-        // For example, update marks for the selected academic year
-        const markRef = doc(db, `marks/${prn}/Academics/${year}`);
-        await setDoc(markRef, { marks: parseInt(marks) }, { merge: true });
-  
+        const years = ["1st Year- B.Tech", "2nd Year- BTech", "3rd Year- B.Tech"];
+        await Promise.all(years.map(async (Year) => {
+          const markRef = doc(db, `marks/${prn}/Academics/${Year}`);
+          await setDoc(markRef, { marks: 0 });
+          console.log(`Marks updated successfully for ${Year}`);
+        }));
         console.log("Academics marks updated successfully!");
       } else {
-        // Handle other subjects
-        // You can add logic here for other subjects if needed
         console.log("Updating marks for subject:", subject);
       }
 
       if (subject === "ExtracurricularActivity") {
-        // Execute logic specific to academics
-        // For example, update marks for the selected academic year
-        const markRef = doc(db, `marks/${prn}/ExtracurricularActivity/`);
+        const markRef = doc(db, `marks/${prn}/ExtracurricularActivity/${subject}`);
         await setDoc(markRef, { marks: parseInt(marks) }, { merge: true });
-  
-        console.log("Academics marks updated successfully!");
+        console.log("ExtracurricularActivity marks updated successfully!");
       } else {
-        // Handle other subjects
-        // You can add logic here for other subjects if needed
         console.log("Updating marks for subject:", subject);
       }
-  
       // Clear the form after submission
       setPrn("");
       setSemester("");
@@ -65,8 +48,6 @@ function UpdateMark() {
       console.error("Error updating marks: ", error);
     }
   };
-  
-
   return (
     <div className="Midbox">
       <div className="MidNav">
@@ -116,7 +97,6 @@ function UpdateMark() {
                   </select>
                 </div>
               </div>
-             
               {subject == "mockInterview" ?  <div className="row">
                 <div className="col-25">
                   <label>Semester</label>
@@ -150,13 +130,10 @@ function UpdateMark() {
                   <select
                     id="Year"
                     name="year"
-                    value={year}
+                    value={Year}
                     onChange={(e) => setYear(e.target.value)}
                   >
                     <option value="">Select year</option>
-                    <option value="10th">10th</option>
-                    <option value="12th">12th</option>
-                    <option value="diploma">Diploma</option>
                     <option value="I">Ist Year</option>
                     <option value="II">IInd Year</option>
                     <option value="III">IIIrd Year</option>
