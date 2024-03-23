@@ -12,6 +12,28 @@ function Student() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); 
+
+    let convertedMarks10 = 0;
+
+    // Convert 10th percentage into marks based on criteria
+    const percentage = parseInt(per10);
+    if (percentage >= 90) {
+      convertedMarks10 = 5;
+    } else if (percentage >= 80 && percentage<90) {
+      convertedMarks10 = 4;
+    }
+    else if(percentage >= 70 && percentage<80){
+      convertedMarks10 = 3;
+    }
+    else if(percentage >= 60 && percentage<70){
+      convertedMarks10 = 2;
+    }
+    else if(percentage >= 50 && percentage<60){
+      convertedMarks10 = 1;
+    }
+    else{
+      convertedMarks10=0;
+    }
   
     try {
       let perAfter10th;
@@ -34,7 +56,8 @@ function Student() {
         name: name,
         prn: prn,
         branch: branch,
-        per10: per10, 
+        convertedMarks10: convertedMarks10, 
+        per10:per10,
         perAfter10th: perAfter10th, 
       });
   
@@ -42,9 +65,13 @@ function Student() {
   
       
       const semesters = ["Academics", "ExtracurricularActivity", "mockInterview", "TrainingAttendance", "TrainingAssessments", "Behavior"];
-      await Promise.all(semesters.map(async (semester) => {
-        await db.collection(`marks/${prn}/${semester}`).doc().set({});
-      }));
+      for (const semester of semesters) {
+        // Reference to the collection
+        const semesterRef = db.collection(`marks/${prn}/${semester}`);
+        
+        // Do something with the collection reference, such as logging it
+        console.log("Created collection reference:", semesterRef.path);
+    }
   
       
       setName("");

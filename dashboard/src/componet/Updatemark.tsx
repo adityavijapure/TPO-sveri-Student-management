@@ -21,10 +21,10 @@ function UpdateMark() {
 
       if (subject === "Academic") {
         const years = ["1st Year- B.Tech", "2nd Year- BTech", "3rd Year- B.Tech"];
-        await Promise.all(years.map(async (Year) => {
-          const markRef = doc(db, `marks/${prn}/Academics/${Year}`);
+        await Promise.all(years.map(async (year) => {
+          const markRef = doc(db, `marks/${prn}/Academics/${year}`);
           await setDoc(markRef, { marks: 0 });
-          console.log(`Marks updated successfully for ${Year}`);
+          console.log(`Marks updated successfully for ${year}`);
         }));
         console.log("Academics marks updated successfully!");
       } else {
