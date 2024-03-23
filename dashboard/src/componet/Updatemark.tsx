@@ -8,14 +8,18 @@ function UpdateMark() {
   const [subject, setSubject] = useState("");
   const [marks, setMarks] = useState("");
   const [year, setYear] = useState("");
-  const [level10, setLevel10] = useState("");
-  const [level12, setLevel12] = useState("");
-  const [firstYear, setFirstYear] = useState("");
-  const [secondYear, setSecondYear] = useState("");
-  const [thirdYear, setThirdYear] = useState("");
+  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+  //   const subjects = ["Subject1", "Subject2", "Subject3"]; // Replace with your actual subject names
+  //   subjects.forEach(async (subject) => {
+  //     await setDoc(doc(semesterRef, subject), { marks: 0 });
+  //   });
+  // });
+    
+
     try {
       // Ensure all fields are filled
       if (!prn || !subject || !marks) {
@@ -24,18 +28,32 @@ function UpdateMark() {
       }
 
       // Update marks for the selected subject and academic levels
-      const markRef = doc(db, `marks/${prn}/${subject}`);
-      const data = {
-        level10: parseInt(level10),
-        level12: parseInt(level12),
-        firstYear: parseInt(firstYear),
-        secondYear: parseInt(secondYear),
-        thirdyear: parseInt(thirdYear), 
-        marks: parseInt(marks)
-      };
-      await setDoc(markRef, data, { merge: true });
+      if (subject === "Academic") {
+        
+        // Execute logic specific to academics
+        // For example, update marks for the selected academic year
+        const markRef = doc(db, `marks/${prn}/Academics/${year}`);
+        await setDoc(markRef, { marks: parseInt(marks) }, { merge: true });
   
-      console.log("Marks updated successfully!");
+        console.log("Academics marks updated successfully!");
+      } else {
+        // Handle other subjects
+        // You can add logic here for other subjects if needed
+        console.log("Updating marks for subject:", subject);
+      }
+
+      if (subject === "ExtracurricularActivity") {
+        // Execute logic specific to academics
+        // For example, update marks for the selected academic year
+        const markRef = doc(db, `marks/${prn}/ExtracurricularActivity/`);
+        await setDoc(markRef, { marks: parseInt(marks) }, { merge: true });
+  
+        console.log("Academics marks updated successfully!");
+      } else {
+        // Handle other subjects
+        // You can add logic here for other subjects if needed
+        console.log("Updating marks for subject:", subject);
+      }
   
       // Clear the form after submission
       setPrn("");
@@ -43,11 +61,6 @@ function UpdateMark() {
       setSubject("");
       setYear("");
       setMarks("");
-      setLevel10("");
-      setLevel12("");
-      setFirstYear("");
-      setSecondYear("");
-      setThirdYear("");
     } catch (error) {
       console.error("Error updating marks: ", error);
     }

@@ -21,28 +21,11 @@ function Student() {
       console.log("Student added successfully!");
 
       // Create marks documents for each semester with default values
-      const semesters = ["II", "III", "IV", "V", "VI", "VII", "VIII"];
-      semesters.forEach(async (semester) => {
-        const semesterRef = db.collection(`marks/${prn}/${semester}`);
-        const subjectMarks = {
-          Academic: 0,
-          ExtracurricularActivity: 0,
-          mockInterview: 0,
-          TrainingAttendance: 0,
-          TrainingAssessments: 0,
-          Project: 0,
-          Internship: 0,
-          MiniProject: 0,
-          TechCertifications: 0,
-          communicationSkills: 0,
-          Behavior: 0,
-          Resume: 0,
-        };
-
-        for (const [subject, marks] of Object.entries(subjectMarks)) {
-          await setDoc(doc(semesterRef, subject), { marks });
-        }
-      });
+      const semesters = ["Academics", "ExtracurricularActivity", "mockInterview", "TrainingAttendance", "TrainingAssessments", "Behavior"];
+      await Promise.all(semesters.map(async (semester) => {
+        await db.collection(`marks/${prn}/${semester}`).doc().set({});
+        console.log(`Empty collection created for ${semester}`);
+      }));
 
       // Clear the form after submission
       setName("");
