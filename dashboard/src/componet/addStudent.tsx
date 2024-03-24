@@ -1,79 +1,76 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { db } from "../firebase";
-import {  doc, setDoc } from "firebase/firestore";
+import { setDoc } from "firebase/firestore";
 
 function Student() {
-  const [prn, setPrn] = useState(""); // Changed to string type
+  const [prn, setPrn] = useState("");
   const [name, setName] = useState("");
   const [branch, setBranch] = useState("");
   const [per10, setPer10] = useState("");
   const [per12, setPer12] = useState("");
-  const [percentageDip, setPerDip]= useState("");
+  const [percentageDip, setPerDip] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     let convertedMarks10 = 0;
-
-    // Convert 10th percentage into marks based on criteria
     const percentage = parseInt(per10);
     if (percentage >= 90) {
       convertedMarks10 = 5;
-    } else if (percentage >= 80 && percentage<90) {
+    } else if (percentage >= 80 && percentage < 90) {
       convertedMarks10 = 4;
-    }
-    else if(percentage >= 70 && percentage<80){
+    } else if (percentage >= 70 && percentage < 80) {
       convertedMarks10 = 3;
-    }
-    else if(percentage >= 60 && percentage<70){
+    } else if (percentage >= 60 && percentage < 70) {
       convertedMarks10 = 2;
-    }
-    else if(percentage >= 50 && percentage<60){
+    } else if (percentage >= 50 && percentage < 60) {
       convertedMarks10 = 1;
     }
-    else{
-      convertedMarks10=0;
-    }
-  
+
     try {
       let perAfter10th;
-      if (per12 === "hsc") { 
+      if (per12 === "hsc") {
         if (!per10 || !per12) {
           throw new Error("Please provide both 10th percentage and 12th percentage.");
         }
-        perAfter10th = per12; 
-      } else if (per12 === "diploma") { 
+        perAfter10th = per12;
+      } else if (per12 === "diploma") {
         if (!per10 || !per12) {
           throw new Error("Please provide both 10th percentage and diploma marks.");
         }
-        perAfter10th = percentageDip; 
+        perAfter10th = percentageDip;
       } else {
         throw new Error("Please select either 12th - HSC or Diploma.");
       }
-  
-      // Add student details
+
       await db.collection("students").doc(prn).set({
         name: name,
         prn: prn,
         branch: branch,
-        convertedMarks10: convertedMarks10, 
-        per10:per10,
-        perAfter10th: perAfter10th, 
+        convertedMarks10: convertedMarks10,
+        per10: per10,
+        perAfter10th: perAfter10th,
       });
-  
+
       console.log("Student added successfully!");
-  
-      
+
       const semesters = ["Academics", "ExtracurricularActivity", "mockInterview", "TrainingAttendance", "TrainingAssessments", "Behavior"];
       for (const semester of semesters) {
-        // Reference to the collection
-        const semesterRef = db.collection(`marks/${prn}/${semester}`);
-        
-        // Do something with the collection reference, such as logging it
-        console.log("Created collection reference:", semesterRef.path);
-    }
+        let semesterRef;
+        if (semester === "Academics") {
+          const years = ["1st Year- B.Tech", "2nd Year- B.Tech", "3rd Year- B.Tech"];
+          for (const year of years) {
+            semesterRef = db.collection("marks").doc(prn).collection(semester).doc(year);
+            await setDoc(semesterRef, { marks: 0 });
+            console.log(`Marks collection created successfully for ${year}`);
+          }
+        } else {
+          semesterRef = db.collection("marks").doc(prn).collection(semester).doc(semester);
+          await setDoc(semesterRef, { marks: 0 });
+          console.log(`Marks collection created successfully for ${semester}`);
+        }
+      }
   
-      
       setName("");
       setPrn("");
       setBranch("");
@@ -84,7 +81,7 @@ function Student() {
       console.error("Error adding student: ", error);
     }
   };
-  
+
 
   return (
     <div className="Midbox">
